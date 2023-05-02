@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    
+    <title>chat.js</title>
+</head>
+<body>
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('myChart');
+    var dataurl = "http://127.0.0.1:5000/get_data";
+
+    function createChart(labels, data){
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+            labels: labels,
+            datasets: [{
+                label: '統計圖表',
+                data: data,
+                borderWidth: 1
+            }]
+            },
+            options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+            }
+        });
+    }
+    function getData(dataurl){
+        $.ajax({
+            url: dataurl,
+            error: function(error){
+                console.log(error)
+            },
+            success: function(res){
+                console.log(JSON.parse(res));
+                var datas = JSON.parse(res)
+                var labels = [];
+                var count = [];
+
+                datas.forEach(function (data) {
+                    labels.push(data.月份);
+                    count.push(data.件數);
+                });
+                createChart(labels, count);
+            }
+        })
+    }
+
+    
+
+    getData(dataurl);
+</script>
+</html>
