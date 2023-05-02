@@ -15,52 +15,6 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('myChart');
     var dataurl = "http://127.0.0.1:5000/get_data";
-
-    function createChart(labels, data){
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-            labels: labels,
-            datasets: [{
-                label: '統計圖表',
-                data: data,
-                borderWidth: 1
-            }]
-            },
-            options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-            }
-        });
-    }
-    function getData(dataurl){
-        $.ajax({
-            url: dataurl,
-            error: function(error){
-                console.log(error)
-            },
-            success: function(res){
-                console.log(JSON.parse(res));
-                var datas = JSON.parse(res)
-                var labels = [];
-                var count = [];
-
-                datas.forEach(function (data) {
-                    labels.push(data.月份);
-                    count.push(data.件數);
-                });
-                createChart(labels, count);
-            }
-        })
-    }
-
-    
-
-    getData(dataurl);
 </script>
 </html>
