@@ -2,7 +2,27 @@
 from flask import Flask, render_template
 import json
 import random
+import psycopg2
+
 app = Flask(__name__)
+
+conn = psycopg2.connect(
+    host="localhost",
+    database="TestDBforCase",
+    user="postgres",
+    password="0000"
+)
+
+@app.route('/query_data')
+def query_data():
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM public.user;")
+    rows = cursor.fetchall()
+    result = []
+    for row in rows:
+        result.append(row)
+    cursor.close()
+    return str(result)
 
 
 @app.route('/')
