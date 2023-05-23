@@ -8,15 +8,37 @@ app = Flask(__name__)
 
 conn = psycopg2.connect(
     host="localhost",
-    database="TestDBforCase",
+    database="postgres",
     user="postgres",
     password="0000"
 )
 
+def query_db(query, args=(), one=False):
+    cursor = conn.cursor()
+    cursor.execute(query, args)
+    rows = cursor.fetchall()
+    conn.commit()
+    conn.close()
+    datas = []
+    for r in rows:
+        data = dict()
+        for i in range(len(cursor.description)):
+            data[cursor.description[i][0]] = r[i]
+        datas.append(data)
+    return datas
+
+def insert_or_update(query, args=(), one=False):
+    cursor = conn.cursor()
+    cursor.execute(query, args)
+    conn.commit()
+    conn.close()
+    return 'insert or update data'
+
+
 @app.route('/query_data')
 def query_data():
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM public.user;")
+    cursor.execute("SELECT * FROM public.users;")
     rows = cursor.fetchall()
     result = []
     for row in rows:
